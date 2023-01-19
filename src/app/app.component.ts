@@ -5,13 +5,20 @@ import { AuthService } from './auth/services/auth.service';
 import { NavbarComponent } from './commons/components/navbar/navbar.component';
 import { LoadingComponent } from './commons/services/loading/loading.component';
 import { LoadingService } from './commons/services/loading/loading.service';
+import { ToasterComponent } from './commons/services/toaster/toaster/toaster.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, NavbarComponent, LoadingComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    NavbarComponent,
+    LoadingComponent,
+    ToasterComponent,
+  ],
 })
 export class AppComponent {
   authService = inject(AuthService);
