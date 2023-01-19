@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { LoadingService } from 'src/app/commons/services/loading/loading.service';
 import { environment } from 'src/environments/environment';
 
 const TOKEN_KEY = 'auth-token';
@@ -12,6 +13,7 @@ export class AuthService {
   authenticationState = new BehaviorSubject(false);
 
   http = inject(HttpClient);
+  loadingService = inject(LoadingService);
 
   constructor() {
     this.checkToken();
@@ -25,6 +27,7 @@ export class AuthService {
   }
 
   login() {
+    this.loadingService.show();
     this.http
       .post(`${environment.api}/login`, {
         email: 'eve.holt@reqres.in',
@@ -35,6 +38,7 @@ export class AuthService {
           localStorage.setItem(TOKEN_KEY, result.token);
           this.authenticationState.next(true);
         }
+        this.loadingService.hide();
       });
   }
 
