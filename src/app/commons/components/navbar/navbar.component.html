@@ -1,0 +1,34 @@
+<header class="d-flex align-items-center justify-content-between py-3 mb-5">
+  <a href="/">
+    <img src="/assets/images/apm-logo.png" class="logo" />
+  </a>
+
+  <div class="col-md-3 text-end">
+    <button
+      *ngIf="authService.isAuthenticated"
+      type="button"
+      class="btn btn-outline-primary me-2"
+      (click)="onLogout()"
+    >
+      Logout
+    </button>
+
+    <button
+      *ngIf="!authService.isAuthenticated"
+      type="button"
+      class="btn btn-outline-primary me-2"
+      routerLink="/auth"
+    >
+      Login
+    </button>
+
+    <button
+      *ngIf="!authService.isAuthenticated"
+      type="button"
+      class="btn btn-primary"
+      routerLink="/auth/register"
+    >
+      Sign-up
+    </button>
+  </div>
+</header>
