@@ -10,10 +10,12 @@ export const authRoutes: Routes = [
   },
   {
     path: 'login',
+    title: 'Login',
     component: LoginComponent,
   },
   {
     path: 'register',
+    title: 'Register',
     component: RegisterComponent,
   },
 ];
