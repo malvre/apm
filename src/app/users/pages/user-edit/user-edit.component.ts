@@ -11,7 +11,7 @@ import { LoadingService } from 'src/app/commons/services/loading/loading.service
 import { ToastService } from 'src/app/commons/services/toaster/toast.service';
 import { ConfirmationDialogService } from 'src/app/commons/services/confirmation-dialog/confirmation-dialog.service';
 import { UserService } from '../../services/user.service';
-import { map } from 'rxjs';
+import { lastValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-user-edit',
@@ -68,12 +68,23 @@ export class UserEditComponent {
   }
 
   async onSave() {
+    this.loadingService.show();
     try {
       const d = this.userForm.value;
+      let data = {
+        last_name: d.lastName,
+        first_name: d.firstName,
+        email: d.email,
+      };
 
-      console.log(this.userId, d);
+      const res = await lastValueFrom(this.userService.add(data));
+      this.toastService.showSuccessToast('Success', 'User created');
+      this.router.navigateByUrl('/users');
     } catch (error) {
       console.error(error);
+      this.toastService.showErrorToast('Ops', 'Something went wrong');
+    } finally {
+      this.loadingService.hide();
     }
   }
 
@@ -86,11 +97,15 @@ export class UserEditComponent {
     );
     if (result) {
       try {
-        // do something
-
+        this.loadingService.show();
+        const res = await lastValueFrom(this.userService.delete(+this.userId));
+        this.toastService.showSuccessToast('Success', 'User deleted');
         this.router.navigateByUrl('/users');
       } catch (error) {
         console.error(error);
+        this.toastService.showErrorToast('Ops', 'Something went wrong');
+      } finally {
+        this.loadingService.hide();
       }
     }
   }
