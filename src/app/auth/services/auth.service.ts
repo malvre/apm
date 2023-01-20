@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { LoadingService } from 'src/app/commons/services/loading/loading.service';
+import { ToastService } from 'src/app/commons/services/toaster/toast.service';
 import { environment } from 'src/environments/environment';
 
 const TOKEN_KEY = 'auth-token';
@@ -14,6 +15,7 @@ export class AuthService {
 
   http = inject(HttpClient);
   loadingService = inject(LoadingService);
+  toastService = inject(ToastService);
 
   constructor() {
     this.checkToken();
@@ -45,6 +47,31 @@ export class AuthService {
   logout() {
     localStorage.removeItem(TOKEN_KEY);
     this.authenticationState.next(false);
+  }
+
+  register() {
+    this.loadingService.show();
+
+    this.http
+      .post(`${environment.api}/register`, {
+        email: 'eve.holt@reqres.in',
+        password: 'pistol',
+      })
+      .subscribe({
+        next: (result: any) => {
+          this.toastService.showSuccessToast('Cool', 'Account created!');
+          localStorage.setItem(TOKEN_KEY, result.token);
+          this.authenticationState.next(true);
+
+          this.loadingService.hide();
+        },
+        error: (Error) => {
+          this.toastService.showErrorToast(
+            'Ops',
+            'Error creating account, please check your email address and password and try again'
+          );
+        },
+      });
   }
 
   get isAuthenticated() {
