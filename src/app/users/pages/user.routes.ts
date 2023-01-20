@@ -11,6 +11,12 @@ export const userRoutes: Routes = [
     component: UserListComponent,
   },
   {
+    path: 'new',
+    title: 'New user',
+    pathMatch: 'full',
+    component: UserEditComponent,
+  },
+  {
     path: ':id',
     title: 'User detail',
     pathMatch: 'full',
@@ -20,11 +26,6 @@ export const userRoutes: Routes = [
     path: ':id/edit',
     title: 'User edit',
     pathMatch: 'full',
-    component: UserEditComponent,
-  },
-  {
-    path: 'add',
-    title: 'New user',
     component: UserEditComponent,
   },
 ];

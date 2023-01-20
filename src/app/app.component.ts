@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import {
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  inject,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from './auth/services/auth.service';
 import { NavbarComponent } from './commons/components/navbar/navbar.component';
@@ -20,10 +25,11 @@ import { ToasterComponent } from './commons/services/toaster/toaster/toaster.com
     ToasterComponent,
   ],
 })
-export class AppComponent {
+export class AppComponent implements AfterContentChecked {
   authService = inject(AuthService);
   loadingService = inject(LoadingService);
   router = inject(Router);
+  cdr = inject(ChangeDetectorRef);
 
   loading$ = this.loadingService.loading$;
 
@@ -35,5 +41,9 @@ export class AppComponent {
         this.router.navigateByUrl('/auth');
       }
     });
+  }
+
+  ngAfterContentChecked(): void {
+    this.cdr.detectChanges();
   }
 }

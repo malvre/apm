@@ -1,1 +1,61 @@
-<p>user-edit works!</p>
+<h1 *ngIf="!userId">New user</h1>
+<h1 *ngIf="userId">Edit user</h1>
+
+<form [formGroup]="userForm" class="mt-4">
+  <div class="row">
+    <div class="col-6 mb-4">
+      <label for="inputFirstName" class="form-label">First name</label>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Your first name"
+        formControlName="firstName"
+      />
+    </div>
+
+    <div class="col-6 mb-4">
+      <label for="inputLastName" class="form-label">Last name</label>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Your last name"
+        formControlName="lastName"
+      />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 mb-4">
+      <label for="inputEmail" class="form-label">E-mail</label>
+      <input
+        type="mail"
+        class="form-control"
+        placeholder="Your e-mail address"
+        formControlName="email"
+      />
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <button
+        type="button"
+        class="btn btn-primary me-2"
+        [disabled]="userForm.invalid"
+      >
+        Save
+      </button>
+      <button
+        *ngIf="userId"
+        type="button"
+        class="btn btn-danger me-2"
+        (click)="onDelete()"
+      >
+        Delete
+      </button>
+      <button type="button" class="btn btn-outline-primary" routerLink="/users">
+        Cancel
+      </button>
+    </div>
+  </div>
+</form>
