@@ -1,0 +1,19 @@
+table.table {
+  tbody {
+    tr {
+      td {
+        button {
+          opacity: 0;
+        }
+      }
+
+      &:hover {
+        td {
+          button {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}
