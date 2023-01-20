@@ -7,6 +7,7 @@
       <th scope="col">First</th>
       <th scope="col">Last</th>
       <th scope="col">E-mail</th>
+      <th scope="col"></th>
     </tr>
   </thead>
 
@@ -14,12 +15,48 @@
     <tr
       *ngFor="let user of users"
       role="button"
-      [routerLink]="['/users', user.id]"
+      (click)="onDetail(content, user)"
     >
       <th scope="row">{{ user.id }}</th>
       <td>{{ user.first_name }}</td>
       <td>{{ user.last_name }}</td>
       <td>{{ user.email }}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary" (click)="onEdit($event, user)">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
+
+<ng-template #content let-offcanvas>
+  <div class="offcanvas-header">
+    <h4 class="offcanvas-title" id="offcanvas-basic-title">User detail</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="offcanvas.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="mb-3">
+      <img [src]="activeUser.avatar" class="img-thumbnail" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <p class="form-control">
+        {{ activeUser.first_name }} {{ activeUser.last_name }}
+      </p>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">E-mail</label>
+      <p class="form-control">
+        {{ activeUser.email }}
+      </p>
+    </div>
+  </div>
+</ng-template>
