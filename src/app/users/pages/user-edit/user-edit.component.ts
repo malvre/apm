@@ -77,8 +77,16 @@ export class UserEditComponent {
         email: d.email,
       };
 
-      const res = await lastValueFrom(this.userService.add(data));
-      this.toastService.showSuccessToast('Success', 'User created');
+      if (this.userId) {
+        const res = await lastValueFrom(
+          this.userService.update(data, +this.userId)
+        );
+        this.toastService.showSuccessToast('Success', 'User updated');
+      } else {
+        const res = await lastValueFrom(this.userService.add(data));
+        this.toastService.showSuccessToast('Success', 'User created');
+      }
+
       this.router.navigateByUrl('/users');
     } catch (error) {
       console.error(error);
