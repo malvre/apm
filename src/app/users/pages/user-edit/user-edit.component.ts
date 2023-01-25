@@ -11,7 +11,7 @@ import { LoadingService } from 'src/app/commons/services/loading/loading.service
 import { ToastService } from 'src/app/commons/services/toaster/toast.service';
 import { ConfirmationDialogService } from 'src/app/commons/services/confirmation-dialog/confirmation-dialog.service';
 import { UserService } from '../../services/user.service';
-import { lastValueFrom, map } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-user-edit',
@@ -42,8 +42,8 @@ export class UserEditComponent {
 
   initForm() {
     this.userForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      first_name: ['', Validators.required],
+      last_name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
     });
 
@@ -53,29 +53,21 @@ export class UserEditComponent {
   loadForm() {
     if (this.userId) {
       this.loadingService.show();
-      this.userService
-        .get(+this.userId)
-        .pipe(map((res) => res.data))
-        .subscribe((result) => {
-          this.userForm.patchValue({
-            firstName: result.first_name,
-            lastName: result.last_name,
-            email: result.email,
-          });
-          this.loadingService.hide();
+      this.userService.get(+this.userId).subscribe((result) => {
+        this.userForm.patchValue({
+          first_name: result.first_name,
+          last_name: result.last_name,
+          email: result.email,
         });
+        this.loadingService.hide();
+      });
     }
   }
 
   async onSave() {
     this.loadingService.show();
     try {
-      const d = this.userForm.value;
-      let data = {
-        last_name: d.lastName,
-        first_name: d.firstName,
-        email: d.email,
-      };
+      const data = this.userForm.value;
 
       if (this.userId) {
         const res = await lastValueFrom(
@@ -101,7 +93,7 @@ export class UserEditComponent {
 
     const result = await this.confirmationDialogService.confirm(
       'Delete user?',
-      `Do you want to permanently delete the user ${this.userForm.controls['firstName'].value}?`
+      `Do you want to permanently delete the user ${this.userForm.controls['first_name'].value}?`
     );
     if (result) {
       try {
