@@ -5,17 +5,20 @@ import { Router, RouterLink } from '@angular/router';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/commons/services/loading/loading.service';
 import { User } from '../../models/user.model';
+import { FormsModule } from '@angular/forms';
+import { SearchPipe } from 'src/app/commons/pipes/search.pipe';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule, SearchPipe],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
   activeUser!: User;
+  searchTerm: string = '';
 
   userService = inject(UserService);
   router = inject(Router);

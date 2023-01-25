@@ -1,9 +1,17 @@
 <h1>User List</h1>
 
-<div class="my-4">
+<div class="my-4 d-flex justify-content-between align-items-center">
   <button type="button" class="btn btn-primary" routerLink="/users/new">
     New user
   </button>
+
+  <input
+    type="text"
+    autocomplete="off"
+    class="form-control w-50"
+    placeholder="Filter by last name"
+    [(ngModel)]="searchTerm"
+  />
 </div>
 
 <table class="table table-hover">
@@ -19,7 +27,7 @@
 
   <tbody>
     <tr
-      *ngFor="let user of users"
+      *ngFor="let user of users | search : searchTerm : 'last_name'"
       role="button"
       (click)="onDetail(content, user)"
     >
