@@ -51,7 +51,7 @@
       type="button"
       class="btn-close"
       aria-label="Close"
-      (click)="offcanvas.dismiss('Cross click')"
+      (click)="offcanvas.dismiss()"
     ></button>
   </div>
 
@@ -73,5 +73,12 @@
         {{ activeUser.email }}
       </p>
     </div>
+
+    <button
+      class="btn btn-primary mt-5"
+      (click)="offcanvas.dismiss(); onEdit($event, activeUser)"
+    >
+      Edit
+    </button>
   </div>
 </ng-template>
