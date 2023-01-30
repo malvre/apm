@@ -6,8 +6,10 @@ import {
   inject,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from './auth/services/auth.service';
 import { NavbarComponent } from './commons/components/navbar/navbar.component';
+import { checkInternet } from './commons/functions/checkInternet';
 import { LoadingComponent } from './commons/services/loading/loading.component';
 import { LoadingService } from './commons/services/loading/loading.service';
 import { ToasterComponent } from './commons/services/toaster/toaster/toaster.component';
@@ -23,6 +25,7 @@ import { ToasterComponent } from './commons/services/toaster/toaster/toaster.com
     NavbarComponent,
     LoadingComponent,
     ToasterComponent,
+    NgbAlertModule,
   ],
 })
 export class AppComponent implements AfterContentChecked {
@@ -32,6 +35,14 @@ export class AppComponent implements AfterContentChecked {
   cdr = inject(ChangeDetectorRef);
 
   loading$ = this.loadingService.loading$;
+
+  online: boolean = true;
+
+  constructor() {
+    checkInternet().subscribe((isOnline) => {
+      this.online = isOnline;
+    });
+  }
 
   ngOnInit() {
     this.authService.authenticationState.subscribe((state) => {
