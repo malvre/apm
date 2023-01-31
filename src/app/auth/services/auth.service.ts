@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import { LoadingService } from 'src/app/commons/services/loading/loading.service';
 import { ToastService } from 'src/app/commons/services/toaster/toast.service';
 import { environment } from 'src/environments/environment';
@@ -49,29 +49,28 @@ export class AuthService {
     this.authenticationState.next(false);
   }
 
-  register() {
-    this.loadingService.show();
+  async register() {
+    try {
+      this.loadingService.show();
 
-    this.http
-      .post(`${environment.api}/register`, {
-        email: 'eve.holt@reqres.in',
-        password: 'pistol',
-      })
-      .subscribe({
-        next: (result: any) => {
-          this.toastService.showSuccessToast('Cool', 'Account created!');
-          localStorage.setItem(TOKEN_KEY, result.token);
-          this.authenticationState.next(true);
+      const response: any = await lastValueFrom(
+        this.http.post(`${environment.api}/register`, {
+          email: 'eve.holt@reqres.in',
+          password: 'pistol',
+        })
+      );
 
-          this.loadingService.hide();
-        },
-        error: (Error) => {
-          this.toastService.showErrorToast(
-            'Ops',
-            'Error creating account, please check your email address and password and try again'
-          );
-        },
-      });
+      this.toastService.showSuccessToast('Great', 'Account created!');
+      localStorage.setItem(TOKEN_KEY, response.token);
+      this.authenticationState.next(true);
+    } catch (error) {
+      this.toastService.showErrorToast(
+        'Ops',
+        'Error creating account, please check your email address and password and try again'
+      );
+    } finally {
+      this.loadingService.hide();
+    }
   }
 
   get isAuthenticated() {
