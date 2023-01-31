@@ -9,7 +9,7 @@
     type="text"
     autocomplete="off"
     class="form-control w-50"
-    placeholder="Filter by last name"
+    placeholder="Filter"
     [(ngModel)]="searchTerm"
   />
 </div>
@@ -27,7 +27,7 @@
 
   <tbody>
     <tr
-      *ngFor="let user of users | search : searchTerm : 'last_name'"
+      *ngFor="let user of users | search : searchTerm"
       role="button"
       (click)="onDetail(content, user)"
     >
