@@ -3,7 +3,7 @@ import { HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
-export function AuthInterceptor(req: HttpRequest<any>, next: HttpHandlerFn) {
+export const AuthInterceptor = (req: HttpRequest<any>, next: HttpHandlerFn) => {
   const authService = inject(AuthService);
 
   if (authService.isAuthenticated) {
@@ -25,4 +25,4 @@ export function AuthInterceptor(req: HttpRequest<any>, next: HttpHandlerFn) {
   } else {
     return next(req);
   }
-}
+};
