@@ -1,41 +1,28 @@
-import { inject, Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-} from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { inject } from '@angular/core';
+import { HttpRequest, HttpHandlerFn } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  authService = inject(AuthService);
+export function AuthInterceptor(req: HttpRequest<any>, next: HttpHandlerFn) {
+  const authService = inject(AuthService);
 
-  constructor() {}
+  if (authService.isAuthenticated) {
+    const authRequest = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${authService.token}`,
+      },
+    });
+    return next(authRequest).pipe(
+      catchError((err) => {
+        if (err.status === 401) {
+          authService.logout();
+        }
 
-  intercept(
-    request: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
-    if (this.authService.isAuthenticated) {
-      const authRequest = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${this.authService.token}`,
-        },
-      });
-      return next.handle(authRequest).pipe(
-        catchError((err) => {
-          if (err.status === 401) {
-            this.authService.logout();
-          }
-
-          const error = err.error.message || err.statusText;
-          return throwError(() => new Error(error));
-        })
-      );
-    } else {
-      return next.handle(request);
-    }
+        const error = err.error.message || err.statusText;
+        return throwError(() => new Error(error));
+      })
+    );
+  } else {
+    return next(req);
   }
 }
