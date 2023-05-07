@@ -27,7 +27,7 @@
 
   <tbody>
     <tr
-      *ngFor="let user of users | search : searchTerm"
+      *ngFor="let user of users() | search : searchTerm"
       role="button"
       (click)="onDetail(content, user)"
     >
@@ -57,26 +57,26 @@
 
   <div class="offcanvas-body">
     <div class="mb-3">
-      <img [src]="activeUser.avatar" class="img-thumbnail" />
+      <img [src]="activeUser().avatar" class="img-thumbnail" />
     </div>
 
     <div class="mb-3">
       <label class="form-label">Name</label>
       <p class="form-control">
-        {{ activeUser.first_name }} {{ activeUser.last_name }}
+        {{ activeUser().first_name }} {{ activeUser().last_name }}
       </p>
     </div>
 
     <div class="mb-3">
       <label class="form-label">E-mail</label>
       <p class="form-control">
-        {{ activeUser.email }}
+        {{ activeUser().email }}
       </p>
     </div>
 
     <button
       class="btn btn-primary mt-5"
-      (click)="offcanvas.dismiss(); onEdit($event, activeUser)"
+      (click)="offcanvas.dismiss(); onEdit($event, activeUser())"
     >
       Edit
     </button>

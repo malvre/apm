@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { Router, RouterLink } from '@angular/router';
@@ -16,8 +16,9 @@ import { SearchPipe } from 'src/app/commons/pipes/search.pipe';
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit {
-  users: User[] = [];
-  activeUser!: User;
+  users = signal<User[]>([]);
+  activeUser = signal<User>({} as User);
+
   searchTerm: string = '';
 
   userService = inject(UserService);
@@ -32,7 +33,7 @@ export class UserListComponent implements OnInit {
   loadData() {
     this.loadingService.show();
     this.userService.all().subscribe((response) => {
-      this.users = response;
+      this.users.set(response);
       this.loadingService.hide();
     });
   }
@@ -43,7 +44,7 @@ export class UserListComponent implements OnInit {
   }
 
   onDetail(content: any, user: User) {
-    this.activeUser = user;
+    this.activeUser.set(user);
     this.offcanvasService.open(content, { position: 'end' }).result.then(
       (result) => {},
       (reason) => {}
